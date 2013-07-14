@@ -30,9 +30,11 @@ angular.module('hanabiApp')
 	$scope.initField = function($field) {
 		$('.fields').autocomplete({
 			source: fieldList,
-			select: function(event,value) {
-				$field.name = value.item.value;
-				$scope.updateId($field);
+			select: function(event, value) {
+				var fieldIndex = $(event.target).attr("data-index");
+				var field = $scope.table.fields[fieldIndex];
+				field.name = value.item.label;
+				$scope.updateId(field);
 			}
 		});
 	};

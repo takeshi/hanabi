@@ -20,8 +20,9 @@
 		<tbody>
 			<tr ng-repeat="field in table.fields">
 				<td>{{field.id}}</td>
-				<td><input type="text" class="w100 fields" 
-					ng-init="initField(field)" 
+				<td><input type="text" class="w100 fields"
+					ng-init="initField(field)"
+					data-index="{{$index}}" 
 					ng-model="field.name" 
 					ng-change="updateId(field)"
 					ng-keypress="console.log(field)"
