@@ -1,0 +1,42 @@
+<div ng-init="init()">
+
+<label>Name</label>
+<input type="text" class="input-large" placeholder="Name" ng-model="table.name" readonly>
+
+<div class="pull-right">
+	<a class="btn" ng-click="addField()">Add Field</a>
+</div>
+<fieldset  ng-show="table.fields.length > 0">
+	<label>Field</label>
+
+    <table class="table ">
+    	<thead>
+    		<tr>
+    			<td>#</td>
+    			<td>Name</td>
+    		</tr>
+    	</thead>
+
+		<tbody>
+			<tr ng-repeat="field in table.fields">
+				<td>{{field.id}}</td>
+				<td><input type="text" class="w100 fields" 
+					ng-init="initField(field)" 
+					ng-model="field.name" 
+					ng-change="updateId(field)"
+					ng-keypress="console.log(field)"
+					/> </td>
+				<td><a class="btn" ng-click="deleteField($index)">delete</a></td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	 <div class="pull-right" >
+	 	<a ng-click="update()" class="btn">更新</a>
+	 	<a href="#/tables" class="btn">戻る</a>
+	 </div>
+
+ </fieldset>
+
+</div>

@@ -11,11 +11,13 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/main.css -->
-    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
+
     <!-- endbuild -->
   </head>
-  <body ng-app="hanabiApp">
+  <body ng-app="hanabiApp" ng-controller="MainCtrl" ng-init="init()">
     <!--[if lt IE 7]>
       <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
     <![endif]-->
@@ -26,6 +28,18 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Hanabi</a>
+            <ul class="nav">
+              <li><a href="#/table">Data Model</a></li>
+            </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="container" ng-view></div>
 
     <script src="components/angular/angular.js"></script>
@@ -33,9 +47,20 @@
     <script src="components/angular-cookies/angular-cookies.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
 
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    
     <!-- build:js scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/table.js"></script>
+
+    <script src="scripts/controllers/tables.js"></script>
+    <script src="scripts/services/db.js"></script>
+    <script src="scripts/services/table.js"></script>
+    <script src="scripts/services/dao.js"></script>
+    <script src="scripts/services/field.js"></script>
     <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
