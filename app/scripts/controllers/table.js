@@ -2,6 +2,7 @@
 
 angular.module('hanabiApp')
 	.controller('TableCtrl', function($scope, $routeParams, db, tableDao, fieldDao) {
+	window.tableScope = $scope;
 	var name = $routeParams.name;
 	$scope.table = {
 		name: name,
@@ -17,6 +18,7 @@ angular.module('hanabiApp')
 					name: f.name
 				});
 			});
+			$scope.addField();
 			$scope.$apply();
 		});
 		fieldDao.findAll(function(err, fields) {
@@ -43,6 +45,11 @@ angular.module('hanabiApp')
 		$scope.table.fields.push({
 			name: ''
 		});
+		$scope.$apply();
+		setTimeout(function(){
+			console.log($("#field_" + ($scope.table.fields.length-1)));
+			$("#field_" + ($scope.table.fields.length -1) ).focus();
+		},10);
 	};
 
 	$scope.deleteField = function(num) {

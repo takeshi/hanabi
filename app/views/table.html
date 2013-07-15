@@ -4,7 +4,7 @@
 <input type="text" class="input-large" placeholder="Name" ng-model="table.name" readonly>
 
 <div class="pull-right">
-	<a class="btn" ng-click="addField()">Add Field</a>
+	<a class="btn" onclick="tableScope.addField()" tabindex="1">Add Field</a>
 </div>
 <fieldset  ng-show="table.fields.length > 0">
 	<label>Field</label>
@@ -25,7 +25,10 @@
 					data-index="{{$index}}" 
 					ng-model="field.name" 
 					ng-change="updateId(field)"
+					onkeydown="if(event.keyCode==13) tableScope.addField()"
 					ng-keypress="console.log(field)"
+					id="field_{{$index}}"
+					tabindex="{{$index + 10}}"
 					/> </td>
 				<td><a class="btn" ng-click="deleteField($index)">delete</a></td>
 			</tr>
@@ -34,8 +37,8 @@
 	</table>
 
 	 <div class="pull-right" >
-	 	<a ng-click="update()" class="btn">更新</a>
-	 	<a href="#/tables" class="btn">戻る</a>
+	 	<a ng-click="update()"  tabindex="101" class="btn">更新</a>
+	 	<a href="#/tables" tabindex="110" class="btn">戻る</a>
 	 </div>
 
  </fieldset>

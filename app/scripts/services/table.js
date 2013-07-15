@@ -71,7 +71,9 @@ angular.module('hanabiApp')
         if (field.id) {
           ids.push(field.id);
         } else {
-          insertFields.push([null, field.name]);
+          if (field.name.trim().length !== 0) {
+            insertFields.push([null, field.name]);
+          }
         }
       });
       if (insertFields.length !== 0) {
