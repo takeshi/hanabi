@@ -1,0 +1,21 @@
+<div ng-init="init()">
+
+	<h4>{{name}} System</h4>
+	<hr />
+
+	<input type="text" class="input-large search-query" placeholder="SubSystem Name" ng-model="subsystem"  ng-keypress="createSubSystem($event)"/> 
+	<hr/>
+
+	<h5>SubSystems </h5>
+    <ul class="sortable" role="menu" style="list-style-type:none;">
+		<li ng-repeat='subsystem in subsystems'>
+			<a href="#/systems/{{name}}/{{subsystem.name}}" class="btn btn-block">{{subsystem.name}}</a>			
+		</li>
+	</ul>
+	
+	
+	<div class="pull-right">
+		<button class="btn" ng-click='update()'> update </button>
+	</div>
+
+</div>

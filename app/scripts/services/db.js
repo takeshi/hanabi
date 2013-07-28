@@ -7,8 +7,8 @@ angular.module('hanabiApp')
   .factory('db', function() {
 
   var execute = function(tx, sql, params, callback) {
-    console.log(sql);
-    console.log(params);
+    // console.log(sql);
+    // console.log(params);
 
     if (sql === null || sql.trim().length <= 1) {
       return;
@@ -33,35 +33,36 @@ angular.module('hanabiApp')
     });
   };
 
-  var batchExecute = function(sql, paramsList, callback, eachCallback, results) {
-    var params = paramsList.pop();
-    if (params === null) {
-      callback(null, results);
+  var batchExecute = function(tx,sql, paramsList, callback, results) {
+    if (paramsList.length === 0) {
+      if (callback) {
+        callback(null, results);
+      }
       return;
     }
-    db.execute(sql, params, function(err, result) {
+    var params = paramsList.pop();
+    tx.execute(sql, params, function(err, result) {
       if (err) {
         callback(err);
         return;
       }
-      if (eachCallback) {
-        eachCallback(err, result, function(err, result) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          results.push(result);
-          batchExecute(sql, paramsList, callback, results);
-        });
-      } else {
-        results.push(result);
-        batchExecute(sql, paramsList, callback, results);
-      }
+      results.push(result);
+      batchExecute(tx,sql, paramsList, callback, results);
     });
   };
 
-  db.batchExecute = function(sql, paramsList, callback, eachCallback) {
-    batchExecute(sql, paramsList, eachCallback, callback, []);
+  db.tx = function(callback) {
+    db.transaction(function(tx) {
+      tx.execute = function(sql, params, callback) {
+        execute(tx, sql, params, callback);
+      };
+      callback(tx);
+    });
+  };
+  db.batchExecute = function(sql, paramsList, callback) {
+    db.tx(function(tx){
+      batchExecute(tx,sql, paramsList, callback, []);
+    });
   };
 
   db.execute = function(sql, params, callback) {

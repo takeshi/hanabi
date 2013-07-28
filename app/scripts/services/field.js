@@ -1,25 +1,29 @@
 'use strict';
 
 angular.module('hanabiApp')
-  .factory('fieldDao', function(db, Dao) {
-  var dao = new Dao('Field', db);
+  .factory('FieldDao', function(Dao) {
+  var FieldDao = function(tx) {
+    Dao.apply(this, ['Field', tx]);
+  }
+  var p = FieldDao.prototype = new Dao();
 
-  dao.insert = function(params, callback) {
+  p.insert = function(params, callback) {
+    var self = this;
     var sql = 'insert into Field values(?,?)';
-    db.execute(sql, params, function(err, result) {
+    self.tx.execute(sql, params, function(err, result) {
       if (err) {
         callback(err);
         return;
       }
-      dao.lastInsertRowId(function(err, result) {
+      self.lastInsertRowId(function(err, result) {
         callback(err, result);
       });
-
     });
   };
-  var batchInsert = function(fields, callback, results) {
+  p._batchInsert = function(fields, callback, results) {
+    var self = this;
     var field = fields.pop();
-    dao.insert(field, function(err, data) {
+    self.insert(field, function(err, data) {
       if (err) {
         callback(err);
         return;
@@ -29,13 +33,13 @@ angular.module('hanabiApp')
         callback(err, results);
         return;
       }
-      batchInsert(fields, callback, results);
+      self._batchInsert(fields, callback, results);
     });
 
   };
-  dao.batchInsert = function(fields, callback) {
-    batchInsert(fields, callback, []);
+  p.batchInsert = function(fields, callback) {
+    this._batchInsert(fields, callback, []);
   };
 
-  return dao;
+  return FieldDao;
 });

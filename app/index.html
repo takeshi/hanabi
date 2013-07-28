@@ -14,6 +14,7 @@
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="components/angular-ui/build/angular-ui.css">
 
     <!-- endbuild -->
   </head>
@@ -42,16 +43,18 @@
 
     <div class="container" ng-view></div>
 
-    <script src="components/angular/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
     <script src="components/angular-resource/angular-resource.js"></script>
     <script src="components/angular-cookies/angular-cookies.js"></script>
     <script src="components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="components/angular-ui/build/angular-ui.js"></script>
 
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     
     <!-- build:js scripts/scripts.js -->
+    <script src="scripts/angular-ui-utils.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/table.js"></script>
@@ -61,6 +64,8 @@
     <script src="scripts/services/table.js"></script>
     <script src="scripts/services/dao.js"></script>
     <script src="scripts/services/field.js"></script>
+    <script src="scripts/controllers/system.js"></script>
+    <script src="scripts/controllers/subsystem.js"></script>
     <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

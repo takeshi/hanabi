@@ -4,3 +4,14 @@ input.w100{
 	width: 97%;
 	margin-bottom: 0;
 }
+
+.show .dropup > .dropdown-menu,
+.show .dropdown > .dropdown-menu {
+  display: block;
+  position: static;
+ }
+
+.show.dropdown-menu{
+  position: static;
+  width: 97%;
+ }

@@ -1,11 +1,14 @@
 'use strict';
 
 angular.module('hanabiApp')
-	.controller('TablesCtrl', function($scope, tableDao) {
+	.controller('TablesCtrl', function($scope, db, TableDao) {
 	$scope.init = function() {
-		tableDao.findAll(function(err, data) {
-			$scope.tables = data;
-			$scope.$apply();
+		db.tx(function(tx) {
+			var tableDao = new TableDao(tx);
+			tableDao.findAll(function(err, data) {
+				$scope.tables = data;
+				$scope.$apply();
+			});
 		});
 	};
 });

@@ -8,6 +8,15 @@ angular.module('hanabiApp', [])
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
   })
+  .when('/systems/:system/:name', {
+    templateUrl: 'views/subsystem.html',
+    controller: 'SubsystemCtrl'
+  })
+
+    .when('/systems/:name', {
+    templateUrl: 'views/system.html',
+    controller: 'SystemCtrl'
+  })
     .when('/tables/:name', {
     templateUrl: 'views/table.html',
     controller: 'TableCtrl'

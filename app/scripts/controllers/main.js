@@ -4,11 +4,35 @@ var init = false;
 
 angular.module('hanabiApp')
   .controller('MainCtrl', function($scope, db, $http) {
-  $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-  ];
+
+  $scope.system = ""
+  $scope.createSystem = function(event) {
+    if (event.keyCode !== 13) {
+      return;
+    }
+    if ($scope.system.trim().length === 0) {
+      return;
+    }
+
+
+    db.execute("insert into System values(?,?)", [$scope.system, null], function() {
+      $scope.system = ""
+      $scope.loadSystem()
+      $scope.$apply();
+    })
+  }
+
+  $scope.loadSystem = function() {
+    db.execute("select * from System", [], function(err, data) {
+      if (err) {
+        console.error(err);
+      }
+      $scope.systems = data;
+      console.log(data)
+      $scope.$apply();
+    });
+
+  }
 
   $scope.init = function() {
     if (init) {
@@ -16,10 +40,13 @@ angular.module('hanabiApp')
     }
     $http.get("/db/table.sql")
       .success(function(data) {
-      var sqls = data.split(";");
-      var queries = [];
-      angular.forEach(sqls, function(sql) {
-        db.execute(sql);
+      db.tx(function(tx) {
+        var sqls = data.split(";");
+        var queries = [];
+        angular.forEach(sqls, function(sql) {
+          tx.execute(sql);
+        });
+        init = true;
       });
     }).error(function(err) {
       console.log(err);

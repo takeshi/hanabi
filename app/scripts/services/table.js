@@ -1,45 +1,53 @@
 'use strict';
 
 angular.module('hanabiApp')
-  .factory('tableDao', function(Dao, db, fieldDao) {
-  var dao = new Dao('DataModel');
-  dao.findField = function(name, callback) {
+  .factory('TableDao', function(Dao, db, FieldDao) {
+  var DataModelDao = function(tx) {
+    Dao.apply(this, ['DataModel', tx]);
+    this.fieldDao = new FieldDao(tx);
+  };
+  var p = DataModelDao.prototype = new Dao();
+
+  p.findField = function(name, callback) {
+    var self = this;
     var sql = 'select * ' +
       'from Field f inner join ' +
       '(select * from DataModel d inner join DataModel_Field dmf on d.id = dmf.datamodel where d.name = ?) d ' +
       'on f.id = d.field;';
-    db.execute(
+    self.tx.execute(
       sql, [name],
       callback);
   };
 
-  dao.insert = function(name, callback) {
+  p.insert = function(name, callback) {
+    var self = this;
     var sql = 'insert into DataModel (id,name) values(null,?);';
-    db.execute(sql, [name], function(err) {
+    self.tx.execute(sql, [name], function(err) {
       if (err) {
         callback(err);
         return;
       }
-      dao.lastInsertRowId(function(err, id) {
+      self.lastInsertRowId(function(err, id) {
         callback(err, id);
       });
     });
   };
 
-  dao.deleteReference = function(tableId, callback) {
+  p.deleteReference = function(tableId, callback) {
     var sql = 'delete from DataModel_Field where datamodel = ?';
-    db.execute(sql, [tableId], callback);
+    this.tx.execute(sql, [tableId], callback);
   };
 
-  dao.insertReference = function(tableId, fieldId, callback) {
+  p.insertReference = function(tableId, fieldId, callback) {
     var sql = 'insert into DataModel_Field(datamodel,field) values (?,?)';
-    db.execute(sql, [tableId, fieldId], callback);
+    this.tx.execute(sql, [tableId, fieldId], callback);
   };
 
-  dao.insertReferences = function(tableId, fieldIds, callback) {
+  p.insertReferences = function(tableId, fieldIds, callback) {
+    var self = this;
     var fieldId = fieldIds.pop();
     console.log(fieldId, tableId);
-    dao.insertReference(tableId, fieldId, function(err, data) {
+    self.insertReference(tableId, fieldId, function(err, data) {
       if (err) {
         return;
       }
@@ -48,22 +56,24 @@ angular.module('hanabiApp')
           callback(null);
         return;
       }
-      dao.insertReferences(tableId, fieldIds, callback);
+      self.insertReferences(tableId, fieldIds, callback);
     });
   };
 
-  dao.updateReference = function(tableId, fieldIds, callback) {
-    dao.deleteReference(tableId, function(err) {
+  p.updateReference = function(tableId, fieldIds, callback) {
+    var self  = this;
+    self.deleteReference(tableId, function(err) {
       if (err) {
         callback(err);
         return;
       }
-      dao.insertReferences(tableId, $.unique(fieldIds), callback);
+      self.insertReferences(tableId, $.unique(fieldIds), callback);
     });
   };
 
 
-  dao.updateFields = function(table, callback) {
+  p.updateFields = function(table, callback) {
+    var self = this;
     var update = function(tableId) {
       var ids = [];
       var insertFields = [];
@@ -77,17 +87,17 @@ angular.module('hanabiApp')
         }
       });
       if (insertFields.length !== 0) {
-        fieldDao.batchInsert(insertFields, function(err, result) {
-          dao.updateReference(tableId, ids.concat(result), callback);
+        self.fieldDao.batchInsert(insertFields, function(err, result) {
+          self.updateReference(tableId, ids.concat(result), callback);
         });
       } else {
-        dao.updateReference(tableId, ids, callback);
+        self.updateReference(tableId, ids, callback);
       }
     };
 
-    dao.findByName(table.name, function(err, data) {
+    self.findByName(table.name, function(err, data) {
       if (err || data.length !== 1) {
-        dao.insert(table.name, function(err, id) {
+        this.insert(table.name, function(err, id) {
           if (err) {
             return;
           }
@@ -98,6 +108,6 @@ angular.module('hanabiApp')
       update(data[0].id);
     });
   };
-  return dao;
+  return DataModelDao;
 
 });
